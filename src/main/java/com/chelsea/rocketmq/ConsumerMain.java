@@ -24,18 +24,15 @@ public class ConsumerMain {
 		 */
 		DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(
 				"ConsumerGroupName");
-		consumer.setNamesrvAddr("127.0.0.1:9876");
+		consumer.setNamesrvAddr("10.1.4.220:19875;10.1.4.220:19876");
 		consumer.setInstanceName("Consumber");
 
-		/**
-		 * 订阅指定topic下tags分别等于TagA或TagC或TagD
-		 */
-		consumer.subscribe("TopicTest2", "TagA || TagB || agC || TagD");
 		/**
 		 * 订阅指定topic下所有消息<br>
 		 * 注意：一个consumer对象可以订阅多个topic
 		 */
-		//consumer.subscribe("TopicTest2", "*");
+		consumer.subscribe("AllocateTopic", "*");
+		consumer.subscribe("aaa", "*");
 		// MessageModel.CLUSTERING 集群消费 :只能有一个消费者消费一次
 		// MessageModel.BROADCASTING 广播模式 :所有的消费者都会消费一次
 		consumer.setMessageModel(MessageModel.CLUSTERING);
@@ -52,33 +49,13 @@ public class ConsumerMain {
 			public ConsumeConcurrentlyStatus consumeMessage(
 					List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
 
-//				System.out.println(Thread.currentThread().getName()
-//						+ " Receive New Messages: " + msgs.size());
-
-				MessageExt msg = msgs.get(0);
-				if (msg.getTopic().equals("TopicTest2")) {
-					// 执行TopicTest1的消费逻辑
-					if (msg.getTags() != null && msg.getTags().equals("TagA")) {
-						// 执行TagA的消费
-						System.out.println(new String(msg.getBody()));
-					} else if (msg.getTags() != null
-							&& msg.getTags().equals("TagB")) {
-						// 执行TagD的消费
-						System.out.println(new String(msg.getBody()));
-					} else if (msg.getTags() != null
-							&& msg.getTags().equals("TagC")) {
-						// 执行TagC的消费
-						System.out.println(new String(msg.getBody()));
-					} else if (msg.getTags() != null
-							&& msg.getTags().equals("TagD")) {
-						// 执行TagD的消费
-						System.out.println(new String(msg.getBody()));
-					}
-				} 
-//				else if (msg.getTopic().equals("TopicTest2")) {
-//					System.out.println(new String(msg.getBody()));
-//				}
-
+			    try {
+			        MessageExt msg = msgs.get(0);
+	                String message = new String(msg.getBody(), "UTF-8");
+	                System.out.println("接收消息：" + message);
+			    } catch (Exception e) {
+			        e.printStackTrace();
+			    }
 				return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 
 			}
