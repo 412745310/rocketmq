@@ -7,6 +7,7 @@ import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
 
@@ -38,6 +39,13 @@ public class ConsumerMain {
 		// MessageModel.CLUSTERING 集群消费 :只能有一个消费者消费一次
 		// MessageModel.BROADCASTING 广播模式 :所有的消费者都会消费一次
 		consumer.setMessageModel(MessageModel.CLUSTERING);
+		consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
+		// 设置一次消费批量大小
+		consumer.setConsumeMessageBatchMaxSize(1);
+		// 设置并行消费最小线程数
+		consumer.setConsumeThreadMin(5);
+		// 设置并行消费最大线程数
+		consumer.setConsumeThreadMax(20);
 
 		consumer.registerMessageListener(new MessageListenerConcurrently() {
 
