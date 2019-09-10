@@ -52,7 +52,7 @@ public class ConsumerMain {
 			    try {
 			        MessageExt msg = msgs.get(0);
 	                String message = new String(msg.getBody(), "UTF-8");
-	                System.out.println(getNowTime() + " 接收消息：" + message);
+	                System.out.println(getNowTime() + " 接收消息 (" +msg.getReconsumeTimes()+ ")：" + message);
 			    } catch (Exception e) {
 			        e.printStackTrace();
 			    }
