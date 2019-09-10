@@ -1,5 +1,6 @@
 package com.chelsea.rocketmq;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -43,7 +44,6 @@ public class ConsumerMain {
 		consumer.setConsumeThreadMin(5);
 		// 设置并行消费最大线程数
 		consumer.setConsumeThreadMax(20);
-
 		consumer.registerMessageListener(new MessageListenerConcurrently() {
 
 			public ConsumeConcurrentlyStatus consumeMessage(
@@ -52,7 +52,7 @@ public class ConsumerMain {
 			    try {
 			        MessageExt msg = msgs.get(0);
 	                String message = new String(msg.getBody(), "UTF-8");
-	                System.out.println("接收消息：" + message);
+	                System.out.println(getNowTime() + " 接收消息：" + message);
 			    } catch (Exception e) {
 			        e.printStackTrace();
 			    }
@@ -68,5 +68,15 @@ public class ConsumerMain {
 
 		System.out.println("ConsumerStarted.");
 	}
-
+	
+	private static String getNowTime() {
+	   String now = LocalDateTime.now().getYear() + "-" + 
+	           LocalDateTime.now().getMonthValue() + "-" + 
+	           LocalDateTime.now().getDayOfMonth() + " " +
+	           LocalDateTime.now().getHour() + ":" +
+	           LocalDateTime.now().getMinute() + ":" +
+	           LocalDateTime.now().getSecond();
+	   return now;
+	}
+	
 }
